@@ -114,3 +114,5 @@ where A.org_cd  = B.org_cd)
 select *
 from tmp;
 
+select * from cslee.tb_emp;
+select * from cslee.tb_org;
