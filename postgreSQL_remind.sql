@@ -116,3 +116,4 @@ from tmp;
 
 select * from cslee.tb_emp;
 select * from cslee.tb_org;
+select * from cslee.tb_accnt;

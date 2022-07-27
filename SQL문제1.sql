@@ -103,3 +103,8 @@ select "급여등급", count("급여등급")
 from ranking
 group by "급여등급"
 order by "급여등급";
+
+select (case when emp_name = '' then '계' else '계' end),
+       count(cust_no)
+from cslee.tb_emp, cslee.tb_accnt
+group by emp_name, accno;
