@@ -1,0 +1,317 @@
+{
+ "cells": [
+  {
+   "cell_type": "code",
+   "execution_count": 2,
+   "id": "6d4c0bf8-a6bc-49b4-b905-a68e3e69ef4e",
+   "metadata": {},
+   "outputs": [],
+   "source": [
+    "from selenium.webdriver import chrome\n",
+    "from selenium import webdriver\n",
+    "import time\n",
+    "import os\n",
+    "import re"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 18,
+   "id": "28a50a94-f806-432f-ad7f-60d2ed593338",
+   "metadata": {},
+   "outputs": [],
+   "source": [
+    "options = webdriver.ChromeOptions()\n",
+    "options.add_argument(\"--start-maximized\");    # 브라우저 열 때 최대화\n",
+    "browser = webdriver.Chrome('chromedriver', options=options)"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 19,
+   "id": "c879a318-8c1a-4542-877d-2dbd9f6bd26b",
+   "metadata": {},
+   "outputs": [],
+   "source": [
+    "url = 'https://www.daangn.com/search/%EA%B4%91%EC%A3%BC%20%EC%A0%84%EB%8F%99%ED%9C%A0%EC%B2%B4%EC%96%B4'\n",
+    "browser.get(url)\n",
+    "time.sleep(3)   "
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 20,
+   "id": "fd1b181e-7e60-400c-a3d2-b0a48dc2ea8a",
+   "metadata": {},
+   "outputs": [],
+   "source": [
+    "trade_list = []"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 21,
+   "id": "b62c7a2b-7b9e-4c6e-bb0d-5bc37a6509bc",
+   "metadata": {
+    "tags": []
+   },
+   "outputs": [
+    {
+     "name": "stdout",
+     "output_type": "stream",
+     "text": [
+      "142건 조회 완료\n"
+     ]
+    }
+   ],
+   "source": [
+    "try:\n",
+    "    try:\n",
+    "        for _ in range(20):\n",
+    "            browser.find_element('xpath', '//*[@id=\"result\"]/div[1]/div[2]').click()\n",
+    "            time.sleep(0.25)\n",
+    "    except:\n",
+    "        for n in range(1, 301):\n",
+    "            log = browser.find_element('xpath', '//*[@id=\"flea-market-wrap\"]/article[{}]/a/div[2]/p[1]'.format(n)).text\n",
+    "            trade_list.append(log)\n",
+    "            time.sleep(0.1)\n",
+    "except:\n",
+    "    print(f'{len(trade_list)}건 조회 완료')"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 23,
+   "id": "c8f273ad-7599-44fc-b1ae-24f378ea6c31",
+   "metadata": {
+    "jupyter": {
+     "source_hidden": true
+    },
+    "tags": []
+   },
+   "outputs": [],
+   "source": [
+    "import pandas as pd\n",
+    "df = pd.DataFrame(trade_list, columns=['거래 장소'])"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 24,
+   "id": "d809c0cf-3b08-4391-aa70-3110c6a6cbd9",
+   "metadata": {
+    "jupyter": {
+     "source_hidden": true
+    },
+    "tags": []
+   },
+   "outputs": [
+    {
+     "data": {
+      "text/html": [
+       "<div>\n",
+       "<style scoped>\n",
+       "    .dataframe tbody tr th:only-of-type {\n",
+       "        vertical-align: middle;\n",
+       "    }\n",
+       "\n",
+       "    .dataframe tbody tr th {\n",
+       "        vertical-align: top;\n",
+       "    }\n",
+       "\n",
+       "    .dataframe thead th {\n",
+       "        text-align: right;\n",
+       "    }\n",
+       "</style>\n",
+       "<table border=\"1\" class=\"dataframe\">\n",
+       "  <thead>\n",
+       "    <tr style=\"text-align: right;\">\n",
+       "      <th></th>\n",
+       "      <th>거래 장소</th>\n",
+       "    </tr>\n",
+       "  </thead>\n",
+       "  <tbody>\n",
+       "    <tr>\n",
+       "      <th>0</th>\n",
+       "      <td>광주 남구 진월동</td>\n",
+       "    </tr>\n",
+       "    <tr>\n",
+       "      <th>1</th>\n",
+       "      <td>광주 남구 행암동</td>\n",
+       "    </tr>\n",
+       "    <tr>\n",
+       "      <th>2</th>\n",
+       "      <td>광주 서구 쌍촌동</td>\n",
+       "    </tr>\n",
+       "    <tr>\n",
+       "      <th>3</th>\n",
+       "      <td>광주 북구 신용동</td>\n",
+       "    </tr>\n",
+       "    <tr>\n",
+       "      <th>4</th>\n",
+       "      <td>광주 광산구 장덕동</td>\n",
+       "    </tr>\n",
+       "    <tr>\n",
+       "      <th>...</th>\n",
+       "      <td>...</td>\n",
+       "    </tr>\n",
+       "    <tr>\n",
+       "      <th>137</th>\n",
+       "      <td>광주 남구 봉선1동</td>\n",
+       "    </tr>\n",
+       "    <tr>\n",
+       "      <th>138</th>\n",
+       "      <td>광주 동구 산수동</td>\n",
+       "    </tr>\n",
+       "    <tr>\n",
+       "      <th>139</th>\n",
+       "      <td>광주 광산구 신창동</td>\n",
+       "    </tr>\n",
+       "    <tr>\n",
+       "      <th>140</th>\n",
+       "      <td>광주 북구 동림동</td>\n",
+       "    </tr>\n",
+       "    <tr>\n",
+       "      <th>141</th>\n",
+       "      <td>광주 서구 금호1동</td>\n",
+       "    </tr>\n",
+       "  </tbody>\n",
+       "</table>\n",
+       "<p>142 rows × 1 columns</p>\n",
+       "</div>"
+      ],
+      "text/plain": [
+       "          거래 장소\n",
+       "0     광주 남구 진월동\n",
+       "1     광주 남구 행암동\n",
+       "2     광주 서구 쌍촌동\n",
+       "3     광주 북구 신용동\n",
+       "4    광주 광산구 장덕동\n",
+       "..          ...\n",
+       "137  광주 남구 봉선1동\n",
+       "138   광주 동구 산수동\n",
+       "139  광주 광산구 신창동\n",
+       "140   광주 북구 동림동\n",
+       "141  광주 서구 금호1동\n",
+       "\n",
+       "[142 rows x 1 columns]"
+      ]
+     },
+     "execution_count": 24,
+     "metadata": {},
+     "output_type": "execute_result"
+    }
+   ],
+   "source": [
+    "df"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 29,
+   "id": "3bb278e4-58b8-4184-960f-96b2d4d3cf67",
+   "metadata": {},
+   "outputs": [
+    {
+     "data": {
+      "text/html": [
+       "<div>\n",
+       "<style scoped>\n",
+       "    .dataframe tbody tr th:only-of-type {\n",
+       "        vertical-align: middle;\n",
+       "    }\n",
+       "\n",
+       "    .dataframe tbody tr th {\n",
+       "        vertical-align: top;\n",
+       "    }\n",
+       "\n",
+       "    .dataframe thead th {\n",
+       "        text-align: right;\n",
+       "    }\n",
+       "</style>\n",
+       "<table border=\"1\" class=\"dataframe\">\n",
+       "  <thead>\n",
+       "    <tr style=\"text-align: right;\">\n",
+       "      <th></th>\n",
+       "      <th>거래 장소</th>\n",
+       "    </tr>\n",
+       "  </thead>\n",
+       "  <tbody>\n",
+       "    <tr>\n",
+       "      <th>count</th>\n",
+       "      <td>142</td>\n",
+       "    </tr>\n",
+       "    <tr>\n",
+       "      <th>unique</th>\n",
+       "      <td>47</td>\n",
+       "    </tr>\n",
+       "    <tr>\n",
+       "      <th>top</th>\n",
+       "      <td>광주 서구 농성2동</td>\n",
+       "    </tr>\n",
+       "    <tr>\n",
+       "      <th>freq</th>\n",
+       "      <td>6</td>\n",
+       "    </tr>\n",
+       "  </tbody>\n",
+       "</table>\n",
+       "</div>"
+      ],
+      "text/plain": [
+       "             거래 장소\n",
+       "count          142\n",
+       "unique          47\n",
+       "top     광주 서구 농성2동\n",
+       "freq             6"
+      ]
+     },
+     "execution_count": 29,
+     "metadata": {},
+     "output_type": "execute_result"
+    }
+   ],
+   "source": [
+    "df.describe(include='object')"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 30,
+   "id": "e4c0e5a7-0bba-4516-9c66-d0bbbee55c11",
+   "metadata": {},
+   "outputs": [],
+   "source": [
+    "df.to_csv('당근마켓_전동휠체어_거래기록.csv', encoding='euc-kr')"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": null,
+   "id": "6448820b-c538-40ed-a6de-f27ecdfc7287",
+   "metadata": {},
+   "outputs": [],
+   "source": []
+  }
+ ],
+ "metadata": {
+  "kernelspec": {
+   "display_name": "Python 3 (ipykernel)",
+   "language": "python",
+   "name": "python3"
+  },
+  "language_info": {
+   "codemirror_mode": {
+    "name": "ipython",
+    "version": 3
+   },
+   "file_extension": ".py",
+   "mimetype": "text/x-python",
+   "name": "python",
+   "nbconvert_exporter": "python",
+   "pygments_lexer": "ipython3",
+   "version": "3.9.12"
+  }
+ },
+ "nbformat": 4,
+ "nbformat_minor": 5
+}
