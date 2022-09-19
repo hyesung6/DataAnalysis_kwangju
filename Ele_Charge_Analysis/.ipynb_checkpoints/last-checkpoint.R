@@ -1,0 +1,32 @@
+mydata<-read.csv("C:/Users/user/Desktop/mer.csv")
+View(mydata)
+head(mydata)
+mydata
+data
+raw_data<-mydata
+head(raw_data)
+set.seed(100)
+trainIndex<-sample(1:nrow(raw_data),replace=F,size=219)
+train=raw_data[trainIndex, ]
+test=raw_data[-trainIndex, ]
+train.x<-scale(train[,-1])
+train.y<-train[,1]
+test.x<-scale(test[,-1])
+test.y<-test[,-1]
+install.packages("glmnet")
+library(glmnet)
+lasso_model<-glmnet(train.x,train.y,alpha=1)
+install.packages("plot")
+install.packages("lambda")
+plot(lasso_model,xvar="lambda")
+par("mar")
+par(mar=c(1,1,1,1))
+plot(lasso_model,xvar="lambda")
+set.seed(100)
+cv.lasso<-cv.glmnet(train.x,train.y,alpha=1)
+plot(cv.lasso)
+(best_lambda<-cv.lasso$lambda.min)
+(lasso_coef<-coef(lasso_model,s=best_lambda))
+pred_y<-predict(cv.lasso,newx=test.x,s="lambda.min")
+install.packages("predict")
+pred_y<-predict(cv.lasso,newx=test.x,s="lambda.min")
