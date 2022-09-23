@@ -96,3 +96,22 @@ autoplot(aust, col='royalblue', lwd=2) + xlab("Year") + ylab("Total Visitor Nigh
 # 홀트윈터지수 평활법의 계절 성분은 덧셈 기법과 곱셈 기법으로 나누어 짐
 # 덧셈 : 계절성이 있는 시계열 데이터의 전반적인 진행이 일정할 때
 # 곱셈 : 계절성이 있는 시계열 데이터의 진행이 수준에 비례하게 진행할 때
+
+# 덧셈 홀트-윈터 지수평활 : 분기별로 3년 예측
+aust.hw.add <- hw(aust, h=12, seasonal='additive')
+
+# 곱셈 홀트-윈터 지수평활 : 분기별로 3년 예측
+aust.hw.mul <- hw(aust, h= 12, seasonal = "multiplicative")
+
+# 덧셈 예측 정확도
+accuracy(aust.hw.add)
+
+# 곱셈 예측 정확도
+accuracy(aust.hw.mul)
+
+# 덧셈 예측결과와 곱셈 예측결과 합쳐서 그래프 그리기
+autoplot(aust) + autolayer(aust.hw.mul, series = "곱셈예측값", lwd=1)+
+  autolayer(aust.hw.add, series = "덧셈예측값", lwd=1)+
+  ggtitle("International Tourists to Australia")+
+  xlab("Year")+
+  ylab("Total Visitor Nights")
