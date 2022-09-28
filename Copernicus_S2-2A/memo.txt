@@ -1,0 +1,4 @@
+-- Options
+1. Adjusted_entropy 실행 -- 자동 조정
+2. Division -- 8개로 설정
+3. Ending Angle - 40도로 설정 
