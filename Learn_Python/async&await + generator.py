@@ -37,7 +37,7 @@ import time
 
 def find_users_generator(n):
     yield from [f'{n}명 중 {i}번 째 사용자 조회 중...' for i in range(1, n+1)]
-    
+
 def find_users_sync(n):
     for gn in find_users_generator(n):
         print(gn)
@@ -69,8 +69,6 @@ async def process_async(n):
     await asyncio.wait([find_users_async(i) for i in range(n, 0, -1)])
     end = time.time()
     print(f'>>> 비동기 처리 총 소요 시간: {end - start}')
-
-asyncio.run()
 
 asyncio.run(process_async(4))
 
